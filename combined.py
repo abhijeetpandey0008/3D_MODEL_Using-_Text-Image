@@ -1,9 +1,3 @@
-#!/usr/bin/env python3
-"""
-Combined 3D-Model CLI Tool
-This single script integrates functionality from generate.py, preprocess.py,
-image_to_model.py, text_to_model.py, utils.py, and visual.py.
-"""
 import os
 import argparse
 import cv2
@@ -77,7 +71,7 @@ def image_to_mesh(rgb_image, depth_map, mask, scale=1.0):
     mesh.apply_scale(scale)
     return mesh
 
-# text_to_model.py functionality
+# text_to_model functionality
 def prompt_to_mesh(prompt: str ,
                    guidance_scale: float =15.0,
                    num_inference_steps: int =64,
@@ -94,7 +88,7 @@ def prompt_to_mesh(prompt: str ,
         variant="fp16" if device.type=='cuda' else None
     ).to(device)
 
-    # Run inference to get a mesh output :contentReference[oaicite:8]{index=8}
+    # Running   to get mesh output 
      output = pipe(
         [prompt],
         guidance_scale=guidance_scale,
@@ -103,8 +97,8 @@ def prompt_to_mesh(prompt: str ,
         output_type="mesh"
     )
      
-     mesh_raw = output.images[0]  # a trimesh.Trimesh per HF docs :contentReference[oaicite:4]{index=4}
-     export_to_ply(mesh_raw, ply_path)                           # :contentReference[oaicite:5]{index=5}
+     mesh_raw = output.images[0]  
+     export_to_ply(mesh_raw, ply_path)                         
      
 
      mesh = trimesh.load(ply_path)
@@ -113,18 +107,10 @@ def prompt_to_mesh(prompt: str ,
     )
      mesh.apply_transform(rot)    
 
-    # output.images is a list of trimesh.Trimesh objects :contentReference[oaicite:9]{index=9}
+    # output.images is a list where  we get trimesh.Trimesh objects
      return mesh
     
-    # try:
-    #     import clip # type: ignore
-    #     _ = clip.load("ViT-B/32", device='cpu')
-    # except Exception:
-    #     pass
-    # # placeholder mesh: unit sphere
-    # return trimesh.primitives.Sphere(radius=1.0)
-
-# visual.py functionality
+    # visual.py functionality
 def render_mesh(mesh):
     scene = pyrender.Scene()
     mesh_node = pyrender.Mesh.from_trimesh(mesh)
@@ -135,8 +121,7 @@ def render_mesh(mesh):
         [1.0,  0.0,  0.0, 0.0],
         [0.0,  0.707, -0.707, 2.0],
         [0.0,  0.707,  0.707, 2.5],
-        [0.0,  0.0,  0.0, 1.0],
-    ])
+        [0.0,  0.0,  0.0, 1.0],])
     scene.add(camera, pose=camera_pose)
     # Add simple lighting
     light = pyrender.DirectionalLight(color=np.ones(3), intensity=3.0)
